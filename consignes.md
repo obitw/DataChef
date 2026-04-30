@@ -3,6 +3,7 @@
 ## Contexte
 
 Le projet consiste à concevoir et développer une plateforme permettant à des utilisateurs de :
+
 - Enregistrer des datasources (jeux de données CSV ou JSON)
 - Soumettre des jobs de transformation sur ces données
 - Récupérer les résultats de manière asynchrone
@@ -38,7 +39,7 @@ L'application doit être déployable sur un PaaS — à la fois sur **Clever Clo
 - `GET /datasources/:id` — récupérer les métadonnées d'une datasource
 - `DELETE /datasources/:id` — supprimer une datasource (refusé si un job est en cours dessus)
 
-*Les datasources sont stockées en base de données. Aucune limite de taille n'est imposée par la spec — c'est un choix d'architecture à assumer.*
+_Les datasources sont stockées en base de données. Aucune limite de taille n'est imposée par la spec — c'est un choix d'architecture à assumer._
 
 #### Soumission et suivi de jobs
 
@@ -51,6 +52,7 @@ Un job passe par les états suivants : **pending → running → done | error**
 #### Pipeline d'opérations
 
 **Opérations obligatoires :**
+
 - `filter` — filtrer les lignes selon une condition
 - `aggregate` — calculer des statistiques sur une ou plusieurs colonnes
 - `group_by` — grouper les lignes par une colonne et agréger par groupe
@@ -229,7 +231,7 @@ Ces contraintes sont évaluées indépendamment des fonctionnalités. Elles refl
 - **Technologie imposée :** Git (versionning obligatoire)
 - **Rendu :** URL du dépôt Git à enregistrer sur https://push.cloud.polytechdo3.fteychene.xyz/ avant la date limite
 
-*La date limite de rendu sera communiquée en cours.*
+_La date limite de rendu sera communiquée en cours._
 
 ### Binômage dev/ops
 
@@ -239,6 +241,7 @@ Chaque groupe dev est associé à un groupe ops qui développe son propre PaaS. 
 2. **PaaS du groupe ops partenaire** — déploiement en collaboration avec le groupe ops
 
 Le groupe dev est responsable de fournir un **contrat de déploiement** au groupe ops :
+
 - Liste des variables d'environnement requises
 - Services nécessaires (base de données, etc.)
 - Port d'écoute
@@ -258,6 +261,7 @@ Le dépôt Git doit contenir :
 - **Les sources de l'application**
 
 - **Une documentation technique** couvrant :
+
   - Build — comment compiler/packager l'application
   - Installation — prérequis, variables d'environnement, base de données
   - Usage — exemples de requêtes couvrant les cas principaux (authentification, enregistrement d'une datasource, soumission d'un job, récupération du résultat)
@@ -268,12 +272,12 @@ Le dépôt Git doit contenir :
 
 ## Système de notation
 
-| Critère | Points |
-|---------|--------|
-| **Fonctionnalités** | 10 |
-| **Contraintes cloud-native** | 6 |
-| **Documentation et contrat de déploiement** | 4 |
-| **Total** | **20** |
+| Critère                                     | Points |
+| ------------------------------------------- | ------ |
+| **Fonctionnalités**                         | 10     |
+| **Contraintes cloud-native**                | 6      |
+| **Documentation et contrat de déploiement** | 4      |
+| **Total**                                   | **20** |
 
 ### Fonctionnalités — 10 points
 
