@@ -1,27 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.user import UserCreate, UserLogin
-from app.services.auth_service import create_user, authenticate_user
-from app.core.security import create_access_token
-from app.db.session import AsyncSessionLocal
 
-router = APIRouter()
+from app.db.session import get_db
+from app.schemas.auth import RegisterIn, LoginIn, TokenOut, UserOut
+from app.services.auth_service import AuthService
 
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+router = APIRouter(prefix="/auth", tags=["auth"])
 
-@router.post("/register")
-async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    return await create_user(db, user.email, user.password)
+service = AuthService()
 
-@router.post("/login")
-async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
-    db_user = await authenticate_user(db, user.email, user.password)
 
-    if not db_user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+@router.post("/register", response_model=UserOut, status_code=201)
+async def register(payload: RegisterIn, db: AsyncSession = Depends(get_db)):
+    return await service.register(db, payload.email, payload.password)
 
-    token = create_access_token({"sub": db_user.id})
 
-    return {"access_token": token}
+@router.post("/login", response_model=TokenOut)
+async def login(payload: LoginIn, db: AsyncSession = Depends(get_db)):
+    return await service.login(db, payload.email, payload.password)
