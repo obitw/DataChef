@@ -1,5 +1,18 @@
 import io
+import numpy as np
 import pandas as pd
+
+
+def _to_python(obj):
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    if isinstance(obj, (np.floating,)):
+        return float(obj)
+    if isinstance(obj, list):
+        return [_to_python(i) for i in obj]
+    if isinstance(obj, dict):
+        return {k: _to_python(v) for k, v in obj.items()}
+    return obj
 
 
 LOADERS = {
@@ -41,10 +54,10 @@ def apply_filter(df: pd.DataFrame, op: dict) -> pd.DataFrame:
 
 
 def apply_aggregate(df: pd.DataFrame, op: dict) -> dict:
-    return {
+    return _to_python({
         col: {fn: AGG_FUNCTIONS[fn](df[col]) for fn in op["functions"]}
         for col in op["columns"]
-    }
+    })
 
 
 def apply_group_by(df: pd.DataFrame, op: dict) -> list[dict]:
@@ -53,7 +66,7 @@ def apply_group_by(df: pd.DataFrame, op: dict) -> list[dict]:
     agg_fn = op["aggregate"]["function"]
     grouped = df.groupby(by)[agg_col].agg(PANDAS_AGG[agg_fn]).reset_index()
     grouped.columns = [by, agg_fn]
-    return grouped.to_dict(orient="records")
+    return _to_python(grouped.to_dict(orient="records"))
 
 
 def apply_select(df: pd.DataFrame, op: dict) -> pd.DataFrame:
@@ -95,4 +108,4 @@ def run_pipeline(raw_data: str, fmt: str, pipeline: list[dict]):
             return TERMINAL_OPS[op](df, step)
         df = TRANSFORM_OPS[op](df, step)
 
-    return df.to_dict(orient="records")
+    return _to_python(df.to_dict(orient="records"))
