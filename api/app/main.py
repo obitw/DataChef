@@ -3,8 +3,10 @@ from fastapi import FastAPI
 
 from app.db.base import Base
 from app.db.session import engine
-import app.models.user  # noqa: F401 - register models with Base
-import app.models.group  # noqa: F401 - register models with Base
+import app.models.user  # noqa: F401
+import app.models.group  # noqa: F401
+import app.models.datasource  # noqa: F401
+import app.models.job  # noqa: F401
 from app.routes import auth, health, groups
 
 
