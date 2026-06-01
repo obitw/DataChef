@@ -7,7 +7,7 @@ import app.models.user  # noqa: F401
 import app.models.group  # noqa: F401
 import app.models.datasource  # noqa: F401
 import app.models.job  # noqa: F401
-from app.routes import auth, health, groups
+from app.routes import auth, health, groups, datasources
 
 
 @asynccontextmanager
@@ -28,3 +28,4 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(groups.router)
+app.include_router(datasources.router)
