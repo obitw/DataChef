@@ -7,7 +7,7 @@ import app.models.user  # noqa: F401
 import app.models.group  # noqa: F401
 import app.models.datasource  # noqa: F401
 import app.models.job  # noqa: F401
-from app.routes import auth, health, groups, datasources
+from app.routes import auth, health, groups, datasources, jobs
 
 
 @asynccontextmanager
@@ -29,3 +29,4 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(groups.router)
 app.include_router(datasources.router)
+app.include_router(jobs.router)
