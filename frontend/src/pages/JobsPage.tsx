@@ -191,7 +191,7 @@ export default function JobsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {jobs.map((job) => (
+              {[...jobs].reverse().map((job) => (
                 <JobRow key={job.id} job={job} />
               ))}
             </tbody>
