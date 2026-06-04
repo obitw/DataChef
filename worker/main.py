@@ -44,7 +44,7 @@ async def run():
 
 async def process_job(job_id: str):
     async with AsyncSessionLocal() as db:
-        # Transition pending → running 
+        # Transition pending → running
         stmt = (
             update(Job)
             .where(Job.id == uuid.UUID(job_id), Job.status == JobStatus.pending)
