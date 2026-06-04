@@ -76,7 +76,10 @@ export default function ResultViewer({ result }: Props) {
     return (
       <div className="space-y-4">
         {Object.entries(agg).map(([col, fns]) => (
-          <div key={col} className="rounded-lg border border-gray-200 overflow-hidden">
+          <div
+            key={col}
+            className="rounded-lg border border-gray-200 overflow-hidden"
+          >
             <div className="bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-700 border-b border-gray-200">
               {col}
             </div>
@@ -85,7 +88,11 @@ export default function ResultViewer({ result }: Props) {
                 <div key={fn} className="bg-white px-4 py-3">
                   <p className="text-xs text-gray-500 uppercase">{fn}</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {typeof val === "number" ? val.toLocaleString("fr-FR", { maximumFractionDigits: 4 }) : String(val)}
+                    {typeof val === "number"
+                      ? val.toLocaleString("fr-FR", {
+                          maximumFractionDigits: 4,
+                        })
+                      : String(val)}
                   </p>
                 </div>
               ))}

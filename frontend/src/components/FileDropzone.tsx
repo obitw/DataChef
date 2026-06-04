@@ -24,7 +24,10 @@ export default function FileDropzone({ onFile, accept = ".csv,.json" }: Props) {
 
   return (
     <div
-      onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
       onClick={() => inputRef.current?.click()}
@@ -51,7 +54,9 @@ export default function FileDropzone({ onFile, accept = ".csv,.json" }: Props) {
           <p className="text-gray-500 text-sm">
             Glissez un fichier CSV ou JSON ici
           </p>
-          <p className="text-gray-400 text-xs mt-1">ou cliquez pour parcourir</p>
+          <p className="text-gray-400 text-xs mt-1">
+            ou cliquez pour parcourir
+          </p>
         </>
       )}
     </div>

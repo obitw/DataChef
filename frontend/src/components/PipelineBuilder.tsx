@@ -136,9 +136,14 @@ function StepEditor({
             <label className="label">Fonctions</label>
             <div className="flex flex-wrap gap-2">
               {AGG_FNS.map((fn) => {
-                const checked = ((step.functions as string[]) || []).includes(fn);
+                const checked = ((step.functions as string[]) || []).includes(
+                  fn,
+                );
                 return (
-                  <label key={fn} className="flex items-center gap-1 text-sm cursor-pointer">
+                  <label
+                    key={fn}
+                    className="flex items-center gap-1 text-sm cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       checked={checked}
@@ -315,7 +320,9 @@ function SortableStep({
         )}
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-mono">#{index + 1}</span>
+            <span className="text-xs text-gray-400 font-mono">
+              #{index + 1}
+            </span>
             <select
               className="input text-sm font-medium"
               value={step.op}
@@ -357,7 +364,9 @@ function SortableStep({
 export default function PipelineBuilder({ steps, onChange }: Props) {
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
 
   const ids = steps.map((_, i) => String(i));

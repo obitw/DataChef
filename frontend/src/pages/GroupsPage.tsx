@@ -9,7 +9,8 @@ import type { Group } from "../types";
 
 function MembersPanel({ groupId }: { groupId: string }) {
   const { data: members, isLoading } = useGroupMembers(groupId);
-  if (isLoading) return <p className="text-xs text-gray-400 mt-2">Chargement...</p>;
+  if (isLoading)
+    return <p className="text-xs text-gray-400 mt-2">Chargement...</p>;
   return (
     <ul className="mt-2 space-y-1">
       {members?.map((m) => (
@@ -115,9 +116,13 @@ export default function GroupsPage() {
           <p className="text-center text-gray-400">Chargement...</p>
         )}
         {!isLoading && !groups?.length && (
-          <p className="text-center text-gray-400">Aucun groupe pour l'instant.</p>
+          <p className="text-center text-gray-400">
+            Aucun groupe pour l'instant.
+          </p>
         )}
-        {groups?.map((g) => <GroupCard key={g.id} group={g} />)}
+        {groups?.map((g) => (
+          <GroupCard key={g.id} group={g} />
+        ))}
       </div>
     </div>
   );

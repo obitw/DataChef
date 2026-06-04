@@ -38,7 +38,9 @@ function DatasourceRow({
       <td className="px-4 py-3 text-sm text-gray-500">
         {ds.group_id ? "Partagée" : "Privée"}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-500">{formatDate(ds.created_at)}</td>
+      <td className="px-4 py-3 text-sm text-gray-500">
+        {formatDate(ds.created_at)}
+      </td>
       <td className="px-4 py-3 text-right">
         {confirm ? (
           <span className="flex items-center justify-end gap-2">

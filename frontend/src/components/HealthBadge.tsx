@@ -12,15 +12,13 @@ export default function HealthBadge() {
     refetchInterval: 30000,
   });
 
-  const color =
-    !data ? "bg-gray-400"
-    : data.status === "ok" ? "bg-green-500"
-    : "bg-red-500";
+  const color = !data
+    ? "bg-gray-400"
+    : data.status === "ok"
+      ? "bg-green-500"
+      : "bg-red-500";
 
-  const label =
-    !data ? "..."
-    : data.status === "ok" ? "Système OK"
-    : "Dégradé";
+  const label = !data ? "..." : data.status === "ok" ? "Système OK" : "Dégradé";
 
   return (
     <div className="flex items-center gap-2 text-sm text-gray-600">

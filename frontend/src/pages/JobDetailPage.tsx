@@ -82,7 +82,8 @@ export default function JobDetailPage() {
 
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
-          Pipeline ({job.pipeline.length} étape{job.pipeline.length > 1 ? "s" : ""})
+          Pipeline ({job.pipeline.length} étape
+          {job.pipeline.length > 1 ? "s" : ""})
         </h2>
         <div className="space-y-2">
           {job.pipeline.map((step, i) => (

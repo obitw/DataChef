@@ -13,7 +13,7 @@ export function useJobs() {
       const jobs = query.state.data;
       if (!jobs) return false;
       const hasActive = jobs.some(
-        (j) => j.status === "pending" || j.status === "running"
+        (j) => j.status === "pending" || j.status === "running",
       );
       return hasActive ? 3000 : false;
     },
@@ -30,7 +30,9 @@ export function useJob(id: string) {
     refetchInterval: (query) => {
       const job = query.state.data;
       if (!job) return false;
-      return job.status === "pending" || job.status === "running" ? 3000 : false;
+      return job.status === "pending" || job.status === "running"
+        ? 3000
+        : false;
     },
   });
 }
