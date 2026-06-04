@@ -1,4 +1,5 @@
 import io
+import math
 import numpy as np
 import pandas as pd
 
@@ -7,7 +8,10 @@ def _to_python(obj):
     if isinstance(obj, (np.integer,)):
         return int(obj)
     if isinstance(obj, (np.floating,)):
-        return float(obj)
+        v = float(obj)
+        return None if (math.isnan(v) or math.isinf(v)) else v
+    if isinstance(obj, float):
+        return None if (math.isnan(obj) or math.isinf(obj)) else obj
     if isinstance(obj, list):
         return [_to_python(i) for i in obj]
     if isinstance(obj, dict):
