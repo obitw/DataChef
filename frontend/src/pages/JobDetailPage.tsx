@@ -47,7 +47,9 @@ export default function JobDetailPage() {
       <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
         <div className="flex items-center gap-3">
           <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${STATUS_STYLES[job.status]}`}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
+              STATUS_STYLES[job.status]
+            }`}
           >
             {isActive && <span className="animate-pulse">●</span>}
             {job.status}

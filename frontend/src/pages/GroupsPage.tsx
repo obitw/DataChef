@@ -120,9 +120,7 @@ export default function GroupsPage() {
             Aucun groupe pour l'instant.
           </p>
         )}
-        {groups?.map((g) => (
-          <GroupCard key={g.id} group={g} />
-        ))}
+        {groups?.map((g) => <GroupCard key={g.id} group={g} />)}
       </div>
     </div>
   );

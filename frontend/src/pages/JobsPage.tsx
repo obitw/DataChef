@@ -22,7 +22,9 @@ function JobRow({ job }: { job: Job }) {
       </td>
       <td className="px-4 py-3">
         <span
-          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_STYLES[job.status]}`}
+          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${
+            STATUS_STYLES[job.status]
+          }`}
         >
           {(job.status === "pending" || job.status === "running") && (
             <span className="animate-pulse">●</span>
