@@ -1,1 +1,9 @@
 .env
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+
+# fichiers locaux
+test_data.csv
+Projet-Dev.pdf
