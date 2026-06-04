@@ -1,7 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useJobs, useCreateJob } from "../hooks/useJobs";
-import { useDatasources } from "../hooks/useDatasources";
+import { useDatasources, useDatasourceColumns } from "../hooks/useDatasources";
 import PipelineBuilder from "../components/PipelineBuilder";
 import type { Job, PipelineStep } from "../types";
 
@@ -62,6 +62,7 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
   const [datasourceId, setDatasourceId] = useState("");
   const [steps, setSteps] = useState<PipelineStep[]>([]);
   const [error, setError] = useState("");
+  const { data: columns } = useDatasourceColumns(datasourceId || undefined);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -127,7 +128,7 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
 
           <div>
             <label className="label mb-2 block">Pipeline</label>
-            <PipelineBuilder steps={steps} onChange={setSteps} />
+            <PipelineBuilder steps={steps} onChange={setSteps} columns={columns ?? []} />
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}

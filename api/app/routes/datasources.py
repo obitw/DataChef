@@ -45,6 +45,16 @@ async def get_datasource(
     return await service.get_accessible_by_id(db, user_id, datasource_id)
 
 
+@router.get("/{datasource_id}/columns", response_model=list[str])
+async def get_datasource_columns(
+    datasource_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    user_id = cast(UUID, user.id)
+    return await service.get_columns(db, user_id, datasource_id)
+
+
 @router.delete("/{datasource_id}")
 async def delete_datasource(
     datasource_id: UUID,

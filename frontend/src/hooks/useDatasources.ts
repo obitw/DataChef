@@ -34,3 +34,14 @@ export function useDeleteDatasource() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["datasources"] }),
   });
 }
+
+export function useDatasourceColumns(id: string | undefined) {
+  return useQuery<string[]>({
+    queryKey: ["datasource-columns", id],
+    queryFn: async () => {
+      const { data } = await client.get(`/datasources/${id}/columns`);
+      return data;
+    },
+    enabled: !!id,
+  });
+}

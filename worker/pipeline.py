@@ -20,7 +20,7 @@ def _to_python(obj):
 
 
 LOADERS = {
-    "csv": lambda data: pd.read_csv(io.StringIO(data)),
+    "csv": lambda data: pd.read_csv(io.StringIO(data), sep=None, engine="python"),
     "json": lambda data: pd.read_json(io.StringIO(data)),
 }
 

@@ -78,6 +78,28 @@ class DatasourceService:
             raise HTTPException(status_code=404, detail="Datasource not found")
         return datasource
 
+    async def get_columns(self, db: AsyncSession, user_id: UUID, datasource_id: UUID) -> list[str]:
+        datasource = await self.get_accessible_by_id(db, user_id, datasource_id)
+        raw = datasource.raw_data
+        if datasource.format == DataFormat.csv:
+            sample = raw[:4096]
+            try:
+                dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+            except csv.Error:
+                dialect = csv.excel  # type: ignore[assignment]
+            reader = csv.DictReader(io.StringIO(raw), dialect=dialect)
+            return list(reader.fieldnames or [])
+        else:
+            parsed = json.loads(raw)
+            if isinstance(parsed, list) and parsed:
+                first = parsed[0]
+                if isinstance(first, dict):
+                    return list(first.keys())
+                return []
+            if isinstance(parsed, dict):
+                return list(parsed.keys())
+            return []
+
     async def delete(self, db: AsyncSession, user_id: UUID, datasource_id: UUID) -> dict:
         datasource = await self.repo.get_accessible_by_id(db, datasource_id, user_id)
         if not datasource:
