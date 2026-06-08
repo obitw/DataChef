@@ -59,18 +59,21 @@ async def process_job(job_id: str):
             log.warning("Job %s not found or already picked up", job_id)
             return
 
+        job_uuid = job.id
+        datasource_id = job.datasource_id
+
         try:
-            ds_result = await db.execute(select(Datasource).where(Datasource.id == job.datasource_id))
+            ds_result = await db.execute(select(Datasource).where(Datasource.id == datasource_id))
             datasource = ds_result.scalar_one_or_none()
 
             if datasource is None:
-                raise ValueError(f"Datasource {job.datasource_id} not found")
+                raise ValueError(f"Datasource {datasource_id} not found")
 
             output = run_pipeline(datasource.raw_data, datasource.format.value, job.pipeline)
 
             await db.execute(
                 update(Job)
-                .where(Job.id == job.id)
+                .where(Job.id == job_uuid)
                 .values(status=JobStatus.done, result=output)
             )
             await db.commit()
@@ -81,7 +84,7 @@ async def process_job(job_id: str):
             await db.rollback()
             await db.execute(
                 update(Job)
-                .where(Job.id == job.id)
+                .where(Job.id == job_uuid)
                 .values(status=JobStatus.error, error_message=str(exc))
             )
             await db.commit()
