@@ -50,6 +50,7 @@ function isValidOrder(steps: PipelineStep[]): boolean {
 interface Props {
   steps: PipelineStep[];
   onChange: (steps: PipelineStep[]) => void;
+  columns?: string[];
 }
 
 function makeStep(op: string): PipelineStep {
@@ -75,22 +76,110 @@ function makeStep(op: string): PipelineStep {
 
 function StepEditor({
   step,
+  columns,
   onChange,
 }: {
   step: PipelineStep;
+  columns: string[];
   onChange: (s: PipelineStep) => void;
 }) {
   const set = (patch: Partial<PipelineStep>) => onChange({ ...step, ...patch });
+
+  // Renders a column picker: dropdown if columns known, fallback to text input
+  function ColPicker({
+    value,
+    onSelect,
+    placeholder,
+    className,
+  }: {
+    value: string;
+    onSelect: (v: string) => void;
+    placeholder?: string;
+    className?: string;
+  }) {
+    if (columns.length > 0) {
+      return (
+        <select
+          className={`input ${className ?? ""}`}
+          value={value}
+          onChange={(e) => onSelect(e.target.value)}
+        >
+          <option value="">— colonne —</option>
+          {columns.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      );
+    }
+    return (
+      <input
+        className={`input ${className ?? ""}`}
+        placeholder={placeholder ?? "colonne"}
+        value={value}
+        onChange={(e) => onSelect(e.target.value)}
+      />
+    );
+  }
+
+  // Multi-column picker: checkboxes if columns known, fallback to comma-separated input
+  function MultiColPicker({
+    value,
+    onSelect,
+    placeholder,
+  }: {
+    value: string[];
+    onSelect: (v: string[]) => void;
+    placeholder?: string;
+  }) {
+    if (columns.length > 0) {
+      return (
+        <div className="flex flex-wrap gap-2">
+          {columns.map((c) => {
+            const checked = value.includes(c);
+            return (
+              <label key={c} className="flex items-center gap-1 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() =>
+                    onSelect(checked ? value.filter((x) => x !== c) : [...value, c])
+                  }
+                />
+                {c}
+              </label>
+            );
+          })}
+        </div>
+      );
+    }
+    return (
+      <input
+        className="input"
+        placeholder={placeholder ?? "col1, col2"}
+        value={value.join(", ")}
+        onChange={(e) =>
+          onSelect(
+            e.target.value
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+          )
+        }
+      />
+    );
+  }
 
   switch (step.op) {
     case "filter":
       return (
         <div className="flex flex-wrap gap-2 items-center">
-          <input
-            className="input w-32"
+          <ColPicker
+            className="w-32"
             placeholder="colonne"
             value={(step.column as string) || ""}
-            onChange={(e) => set({ column: e.target.value })}
+            onSelect={(v) => set({ column: v })}
           />
           <select
             className="input w-20"
@@ -117,19 +206,11 @@ function StepEditor({
       return (
         <div className="space-y-2">
           <div>
-            <label className="label">Colonnes (séparées par virgule)</label>
-            <input
-              className="input"
+            <label className="label">Colonnes</label>
+            <MultiColPicker
               placeholder="salary, age"
-              value={((step.columns as string[]) || []).join(", ")}
-              onChange={(e) =>
-                set({
-                  columns: e.target.value
-                    .split(",")
-                    .map((s) => s.trim())
-                    .filter(Boolean),
-                })
-              }
+              value={(step.columns as string[]) || []}
+              onSelect={(v) => set({ columns: v })}
             />
           </div>
           <div>
@@ -174,22 +255,20 @@ function StepEditor({
         <div className="flex flex-wrap gap-2 items-end">
           <div>
             <label className="label">Grouper par</label>
-            <input
-              className="input w-32"
+            <ColPicker
+              className="w-32"
               placeholder="department"
               value={(step.by as string) || ""}
-              onChange={(e) => set({ by: e.target.value })}
+              onSelect={(v) => set({ by: v })}
             />
           </div>
           <div>
             <label className="label">Colonne à agréger</label>
-            <input
-              className="input w-32"
+            <ColPicker
+              className="w-32"
               placeholder="salary"
               value={agg.column}
-              onChange={(e) =>
-                set({ aggregate: { ...agg, column: e.target.value } })
-              }
+              onSelect={(v) => set({ aggregate: { ...agg, column: v } })}
             />
           </div>
           <div>
@@ -214,19 +293,11 @@ function StepEditor({
     case "deduplicate":
       return (
         <div>
-          <label className="label">Colonnes (séparées par virgule)</label>
-          <input
-            className="input"
+          <label className="label">Colonnes</label>
+          <MultiColPicker
             placeholder="name, age, city"
-            value={((step.columns as string[]) || []).join(", ")}
-            onChange={(e) =>
-              set({
-                columns: e.target.value
-                  .split(",")
-                  .map((s) => s.trim())
-                  .filter(Boolean),
-              })
-            }
+            value={(step.columns as string[]) || []}
+            onSelect={(v) => set({ columns: v })}
           />
         </div>
       );
@@ -236,11 +307,11 @@ function StepEditor({
         <div className="flex gap-2 items-end">
           <div>
             <label className="label">Colonne</label>
-            <input
-              className="input w-32"
+            <ColPicker
+              className="w-32"
               placeholder="age"
               value={(step.column as string) || ""}
-              onChange={(e) => set({ column: e.target.value })}
+              onSelect={(v) => set({ column: v })}
             />
           </div>
           <div>
@@ -282,6 +353,7 @@ function SortableStep({
   index,
   isTerminal,
   isFixed,
+  columns,
   onChange,
   onRemove,
 }: {
@@ -290,6 +362,7 @@ function SortableStep({
   index: number;
   isTerminal: boolean;
   isFixed: boolean;
+  columns: string[];
   onChange: (s: PipelineStep) => void;
   onRemove: () => void;
 }) {
@@ -347,7 +420,7 @@ function SortableStep({
               </span>
             )}
           </div>
-          <StepEditor step={step} onChange={onChange} />
+          <StepEditor step={step} columns={columns} onChange={onChange} />
         </div>
         <button
           onClick={onRemove}
@@ -361,7 +434,7 @@ function SortableStep({
   );
 }
 
-export default function PipelineBuilder({ steps, onChange }: Props) {
+export default function PipelineBuilder({ steps, onChange, columns = [] }: Props) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -423,6 +496,7 @@ export default function PipelineBuilder({ steps, onChange }: Props) {
               index={i}
               isTerminal={TERMINAL_OPS.includes(step.op)}
               isFixed={step.op === "select" || TERMINAL_OPS.includes(step.op)}
+              columns={columns}
               onChange={(s) => updateStep(i, s)}
               onRemove={() => removeStep(i)}
             />
