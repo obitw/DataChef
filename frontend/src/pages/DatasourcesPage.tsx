@@ -193,11 +193,7 @@ export default function DatasourcesPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {datasources.map((ds) => (
-                <DatasourceRow
-                  key={ds.id}
-                  ds={ds}
-                  onDelete={handleDelete}
-                />
+                <DatasourceRow key={ds.id} ds={ds} onDelete={handleDelete} />
               ))}
             </tbody>
           </table>
