@@ -139,12 +139,17 @@ function StepEditor({
           {columns.map((c) => {
             const checked = value.includes(c);
             return (
-              <label key={c} className="flex items-center gap-1 text-sm cursor-pointer">
+              <label
+                key={c}
+                className="flex items-center gap-1 text-sm cursor-pointer"
+              >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() =>
-                    onSelect(checked ? value.filter((x) => x !== c) : [...value, c])
+                    onSelect(
+                      checked ? value.filter((x) => x !== c) : [...value, c],
+                    )
                   }
                 />
                 {c}
@@ -434,7 +439,11 @@ function SortableStep({
   );
 }
 
-export default function PipelineBuilder({ steps, onChange, columns = [] }: Props) {
+export default function PipelineBuilder({
+  steps,
+  onChange,
+  columns = [],
+}: Props) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {

@@ -5,6 +5,7 @@ import {
   useJoinGroup,
   useGroupMembers,
 } from "../hooks/useGroups";
+import { useToast } from "../components/Toast";
 import type { Group } from "../types";
 
 function MembersPanel({ groupId }: { groupId: string }) {
@@ -24,7 +25,20 @@ function MembersPanel({ groupId }: { groupId: string }) {
 
 function GroupCard({ group }: { group: Group }) {
   const joinGroup = useJoinGroup();
+  const toast = useToast();
   const [open, setOpen] = useState(false);
+
+  async function handleJoin() {
+    try {
+      await joinGroup.mutateAsync(group.id);
+      toast("success", `Vous avez rejoint "${group.name}" !`);
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail ?? "Impossible de rejoindre ce groupe.";
+      toast("error", String(msg));
+    }
+  }
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -42,7 +56,7 @@ function GroupCard({ group }: { group: Group }) {
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => joinGroup.mutate(group.id)}
+            onClick={handleJoin}
             disabled={joinGroup.isPending}
             className="btn-secondary text-sm"
           >
@@ -64,6 +78,7 @@ function GroupCard({ group }: { group: Group }) {
 export default function GroupsPage() {
   const { data: groups, isLoading } = useGroups();
   const createGroup = useCreateGroup();
+  const toast = useToast();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
@@ -72,6 +87,7 @@ export default function GroupsPage() {
     setError("");
     try {
       await createGroup.mutateAsync(name.trim());
+      toast("success", `Groupe "${name.trim()}" créé !`);
       setName("");
     } catch (err: unknown) {
       const msg =

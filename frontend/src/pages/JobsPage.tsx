@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useJobs, useCreateJob } from "../hooks/useJobs";
 import { useDatasources, useDatasourceColumns } from "../hooks/useDatasources";
 import PipelineBuilder from "../components/PipelineBuilder";
+import { useToast } from "../components/Toast";
 import type { Job, PipelineStep } from "../types";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -58,6 +59,7 @@ function JobRow({ job }: { job: Job }) {
 function NewJobModal({ onClose }: { onClose: () => void }) {
   const { data: datasources } = useDatasources();
   const createJob = useCreateJob();
+  const toast = useToast();
   const [jobName, setJobName] = useState("");
   const [datasourceId, setDatasourceId] = useState("");
   const [steps, setSteps] = useState<PipelineStep[]>([]);
@@ -70,11 +72,13 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
     if (!datasourceId) return setError("Sélectionnez une datasource.");
     if (!steps.length) return setError("Ajoutez au moins une étape.");
     try {
+      const name = jobName.trim() || "Job sans titre";
       await createJob.mutateAsync({
-        name: jobName.trim() || "Job sans titre",
+        name,
         datasource_id: datasourceId,
         pipeline: steps,
       });
+      toast("success", `Job "${name}" créé ! Le traitement démarre.`);
       onClose();
     } catch (err: unknown) {
       const msg =
@@ -128,7 +132,11 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
 
           <div>
             <label className="label mb-2 block">Pipeline</label>
-            <PipelineBuilder steps={steps} onChange={setSteps} columns={columns ?? []} />
+            <PipelineBuilder
+              steps={steps}
+              onChange={setSteps}
+              columns={columns ?? []}
+            />
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
