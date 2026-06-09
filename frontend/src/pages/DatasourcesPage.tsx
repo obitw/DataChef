@@ -6,6 +6,7 @@ import {
 } from "../hooks/useDatasources";
 import { useGroups } from "../hooks/useGroups";
 import FileDropzone from "../components/FileDropzone";
+import { useToast } from "../components/Toast";
 import type { Datasource } from "../types";
 
 function formatDate(iso: string) {
@@ -23,7 +24,7 @@ function DatasourceRow({
   onDelete,
 }: {
   ds: Datasource;
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => void | Promise<void>;
 }) {
   const [confirm, setConfirm] = useState(false);
 
@@ -75,6 +76,7 @@ export default function DatasourcesPage() {
   const { data: groups } = useGroups();
   const upload = useUploadDatasource();
   const deleteDatasource = useDeleteDatasource();
+  const toast = useToast();
 
   const [file, setFile] = useState<File | null>(null);
   const [name, setName] = useState("");
@@ -94,11 +96,24 @@ export default function DatasourcesPage() {
       setFile(null);
       setName("");
       setGroupId("");
+      toast("success", "Datasource importée avec succès !");
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data
           ?.detail ?? "Erreur lors de l'upload.";
       setUploadError(String(msg));
+    }
+  }
+
+  async function handleDelete(id: string) {
+    try {
+      await deleteDatasource.mutateAsync(id);
+      toast("success", "Datasource supprimée.");
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail ?? "Impossible de supprimer cette datasource.";
+      toast("error", String(msg));
     }
   }
 
@@ -181,7 +196,7 @@ export default function DatasourcesPage() {
                 <DatasourceRow
                   key={ds.id}
                   ds={ds}
-                  onDelete={(id) => deleteDatasource.mutate(id)}
+                  onDelete={handleDelete}
                 />
               ))}
             </tbody>
