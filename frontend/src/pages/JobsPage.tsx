@@ -132,7 +132,11 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
 
           <div>
             <label className="label mb-2 block">Pipeline</label>
-            <PipelineBuilder steps={steps} onChange={setSteps} columns={columns ?? []} />
+            <PipelineBuilder
+              steps={steps}
+              onChange={setSteps}
+              columns={columns ?? []}
+            />
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
