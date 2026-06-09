@@ -26,7 +26,7 @@ class GroupService:
             raise HTTPException(status_code=404, detail="Group not found")
 
         if await self.repo.is_member(db, user_id, group_id):
-            raise HTTPException(status_code=400, detail="Already a member of this group")
+            raise HTTPException(status_code=400, detail="Vous êtes déjà membre de ce groupe.")
 
         await self.repo.add_user(db, user_id, group_id)
         return {"status": "joined"}
