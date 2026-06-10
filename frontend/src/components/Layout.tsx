@@ -15,7 +15,7 @@ export default function Layout() {
     <div className="flex h-screen bg-gray-50">
       <aside className="w-56 bg-white border-r border-gray-200 flex flex-col">
         <div className="px-6 py-5 border-b border-gray-200">
-          <span className="text-xl font-bold text-indigo-600">DataChef</span>
+          <img src="/logo.png" alt="DataChef" className="h-25 w-auto" />
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map(({ to, label }) => (
