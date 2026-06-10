@@ -4,6 +4,7 @@ import { useJobs, useCreateJob } from "../hooks/useJobs";
 import { useDatasources, useDatasourceColumns } from "../hooks/useDatasources";
 import PipelineBuilder from "../components/PipelineBuilder";
 import { useToast } from "../components/Toast";
+import { downloadAsCsv, downloadAsJson } from "../utils/download";
 import type { Job, PipelineStep } from "../types";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -45,12 +46,30 @@ function JobRow({ job }: { job: Job }) {
         })}
       </td>
       <td className="px-4 py-3 text-right">
-        <Link
-          to={`/jobs/${job.id}`}
-          className="text-sm text-indigo-600 hover:underline"
-        >
-          Détail →
-        </Link>
+        <div className="flex items-center justify-end gap-3">
+          {job.status === "done" && job.result !== null && (
+            <>
+              <button
+                onClick={() => downloadAsCsv(job)}
+                className="text-sm text-green-600 hover:underline"
+              >
+                ↓ CSV
+              </button>
+              <button
+                onClick={() => downloadAsJson(job)}
+                className="text-sm text-green-600 hover:underline"
+              >
+                ↓ JSON
+              </button>
+            </>
+          )}
+          <Link
+            to={`/jobs/${job.id}`}
+            className="text-sm text-indigo-600 hover:underline"
+          >
+            Détail →
+          </Link>
+        </div>
       </td>
     </tr>
   );

@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useJob } from "../hooks/useJobs";
 import ResultViewer from "../components/ResultViewer";
+import { downloadAsCsv, downloadAsJson } from "../utils/download";
 
 const STATUS_STYLES: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -106,9 +107,25 @@ export default function JobDetailPage() {
 
       {job.status === "done" && job.result !== null && (
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
-            Résultat
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              Résultat
+            </h2>
+            <div className="flex gap-2">
+              <button
+                onClick={() => downloadAsCsv(job)}
+                className="btn-secondary text-sm"
+              >
+                ↓ CSV
+              </button>
+              <button
+                onClick={() => downloadAsJson(job)}
+                className="btn-secondary text-sm"
+              >
+                ↓ JSON
+              </button>
+            </div>
+          </div>
           <ResultViewer result={job.result} />
         </div>
       )}
