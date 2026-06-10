@@ -48,7 +48,7 @@ class JobService:
         return await self.repo.list_for_user(db, user.id)
 
     async def get_job(self, db: AsyncSession, user: User, job_id: UUID) -> Job:
-        job = await self.repo.get_by_id(db, job_id)
+        job = await self.repo.get_accessible_by_id(db, job_id, user.id)
         if job is None:
             raise HTTPException(status_code=404, detail="Job not found")
         return job
