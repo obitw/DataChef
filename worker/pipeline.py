@@ -103,13 +103,33 @@ TRANSFORM_OPS = {
 }
 
 
-def run_pipeline(raw_data: str, fmt: str, pipeline: list[dict]):
-    df = load_dataframe(raw_data, fmt)
+class PipelineError(Exception):
+    pass
 
-    for step in pipeline:
-        op = step["op"]
-        if op in TERMINAL_OPS:
-            return TERMINAL_OPS[op](df, step)
-        df = TRANSFORM_OPS[op](df, step)
+
+def run_pipeline(raw_data: str, fmt: str, pipeline: list[dict]):
+    try:
+        df = load_dataframe(raw_data, fmt)
+    except Exception as exc:
+        raise PipelineError(f"Impossible de lire les données ({fmt}) : {exc}") from exc
+
+    for i, step in enumerate(pipeline):
+        op = step.get("op", "?")
+        label = f"Étape {i + 1} ({op})"
+        try:
+            if op in TERMINAL_OPS:
+                return TERMINAL_OPS[op](df, step)
+            elif op in TRANSFORM_OPS:
+                df = TRANSFORM_OPS[op](df, step)
+            else:
+                raise PipelineError(f"Opération inconnue : '{op}'")
+        except PipelineError:
+            raise
+        except KeyError as exc:
+            raise PipelineError(f"{label} : colonne {exc} introuvable dans le dataset") from exc
+        except TypeError as exc:
+            raise PipelineError(f"{label} : type incompatible — {exc}") from exc
+        except Exception as exc:
+            raise PipelineError(f"{label} : {exc}") from exc
 
     return _to_python(df.to_dict(orient="records"))

@@ -80,7 +80,7 @@ async def process_job(job_id: str):
             log.info("Job %s done", job_id)
 
         except Exception as exc:
-            log.error("Job %s failed: %s", job_id, exc)
+            log.exception("Job %s failed: %s", job_id, exc)
             await db.rollback()
             await db.execute(
                 update(Job)
