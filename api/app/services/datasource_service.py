@@ -90,7 +90,13 @@ class DatasourceService:
             reader = csv.DictReader(io.StringIO(raw), dialect=dialect)
             return list(reader.fieldnames or [])
         else:
-            parsed = json.loads(raw)
+            try:
+                parsed = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Datasource contient du JSON invalide",
+                ) from exc
             if isinstance(parsed, list) and parsed:
                 first = parsed[0]
                 if isinstance(first, dict):
