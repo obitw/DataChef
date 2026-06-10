@@ -29,8 +29,14 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">DataChef</h1>
-        <p className="text-sm text-gray-500 mb-6">Créer un compte</p>
+        <img
+          src="/logo.png"
+          alt="DataChef"
+          className="h-40 w-auto mx-auto mb-6"
+        />
+        <p className="text-sm text-gray-500 mb-6 text-center">
+          Créer un compte
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
