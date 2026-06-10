@@ -15,44 +15,55 @@ const STATUS_STYLES: Record<string, string> = {
 
 function JobRow({ job }: { job: Job }) {
   return (
-    <tr className="hover:bg-gray-50">
-      <td className="px-4 py-3 font-medium text-gray-900">
-        <Link to={`/jobs/${job.id}`} className="hover:text-indigo-600">
-          {job.name}
-        </Link>
-      </td>
-      <td className="px-4 py-3">
-        <span
-          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${
-            STATUS_STYLES[job.status]
-          }`}
-        >
-          {(job.status === "pending" || job.status === "running") && (
-            <span className="animate-pulse">●</span>
-          )}
-          {job.status}
-        </span>
-      </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
-        {job.pipeline.length} étape{job.pipeline.length > 1 ? "s" : ""}
-      </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
-        {new Date(job.created_at).toLocaleString("fr-FR", {
-          day: "2-digit",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </td>
-      <td className="px-4 py-3 text-right">
-        <Link
-          to={`/jobs/${job.id}`}
-          className="text-sm text-indigo-600 hover:underline"
-        >
-          Détail →
-        </Link>
-      </td>
-    </tr>
+    <>
+      <tr className="hover:bg-gray-50">
+        <td className="px-4 py-3 font-medium text-gray-900">
+          <Link to={`/jobs/${job.id}`} className="hover:text-indigo-600">
+            {job.name}
+          </Link>
+        </td>
+        <td className="px-4 py-3">
+          <span
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${
+              STATUS_STYLES[job.status]
+            }`}
+          >
+            {(job.status === "pending" || job.status === "running") && (
+              <span className="animate-pulse">●</span>
+            )}
+            {job.status}
+          </span>
+        </td>
+        <td className="px-4 py-3 text-sm text-gray-500">
+          {job.pipeline.length} étape{job.pipeline.length > 1 ? "s" : ""}
+        </td>
+        <td className="px-4 py-3 text-sm text-gray-500">
+          {new Date(job.created_at).toLocaleString("fr-FR", {
+            day: "2-digit",
+            month: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </td>
+        <td className="px-4 py-3 text-right">
+          <Link
+            to={`/jobs/${job.id}`}
+            className="text-sm text-indigo-600 hover:underline"
+          >
+            Détail →
+          </Link>
+        </td>
+      </tr>
+      {job.status === "error" && job.error_message && (
+        <tr className="bg-red-50">
+          <td colSpan={5} className="px-4 py-2">
+            <p className="text-xs text-red-600 font-mono truncate">
+              {job.error_message}
+            </p>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 
