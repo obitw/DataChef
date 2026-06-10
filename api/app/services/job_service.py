@@ -35,7 +35,7 @@ class JobService:
             owner_id=user.id,
             datasource_id=payload.datasource_id,
             name=payload.name,
-            pipeline=payload.pipeline,
+            pipeline=[step.model_dump() for step in payload.pipeline],
             status=JobStatus.pending,
         )
         job = await self.repo.create(db, job)
