@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "app_id": "app_6b8a0235-fd86-4c54-893b-1471ce5d3fed",
+      "org_id": "orga_e4d64185-94d8-4d10-9d26-31b39dafd743",
+      "deploy_url": "https://push-n3-par-clevercloud-customers.services.clever-cloud.com/app_6b8a0235-fd86-4c54-893b-1471ce5d3fed.git",
+      "git_ssh_url": "git+ssh://git@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_6b8a0235-fd86-4c54-893b-1471ce5d3fed.git",
+      "name": "datachef-api",
+      "alias": "api"
+    },
+    {
+      "app_id": "app_0dcf8122-0490-4c3f-8a23-c5bae3e82c08",
+      "org_id": "orga_e4d64185-94d8-4d10-9d26-31b39dafd743",
+      "deploy_url": "https://push-n3-par-clevercloud-customers.services.clever-cloud.com/app_0dcf8122-0490-4c3f-8a23-c5bae3e82c08.git",
+      "git_ssh_url": "git+ssh://git@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_0dcf8122-0490-4c3f-8a23-c5bae3e82c08.git",
+      "name": "datachef-front",
+      "alias": "front"
+    }
+  ]
+}
