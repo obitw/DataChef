@@ -24,6 +24,7 @@ app = FastAPI(
     version="0.1.0",
     description="Plateforme de traitement de données asynchrone",
     lifespan=lifespan,
+    redirect_slashes=False,
 )
 
 app.add_middleware(
