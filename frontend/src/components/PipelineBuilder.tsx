@@ -388,6 +388,7 @@ function SortableStep({
       <div className="flex items-start gap-3">
         {!isFixed && (
           <button
+            type="button"
             {...attributes}
             {...listeners}
             className="mt-1 text-gray-300 hover:text-gray-500 cursor-grab active:cursor-grabbing"
@@ -428,6 +429,7 @@ function SortableStep({
           <StepEditor step={step} columns={columns} onChange={onChange} />
         </div>
         <button
+          type="button"
           onClick={onRemove}
           className="text-gray-300 hover:text-red-500 text-lg leading-none"
           title="Supprimer"
