@@ -85,11 +85,55 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState("");
   const { data: columns } = useDatasourceColumns(datasourceId || undefined);
 
+  function getStepError(step: PipelineStep): string | null {
+    switch (step.op) {
+      case "filter":
+        if (!step.column) return "Filter : sélectionnez une colonne.";
+        if (step.value === "" || step.value === null || step.value === undefined)
+          return "Filter : renseignez une valeur.";
+        return null;
+      case "aggregate":
+        if (!(step.columns as string[])?.length)
+          return "Aggregate : sélectionnez au moins une colonne.";
+        if (!(step.functions as string[])?.length)
+          return "Aggregate : sélectionnez au moins une fonction.";
+        return null;
+      case "group_by": {
+        const agg = step.aggregate as { column: string; function: string };
+        if (!step.by) return "Group by : renseignez le champ de groupement.";
+        if (!agg?.column)
+          return "Group by : sélectionnez une colonne à agréger.";
+        return null;
+      }
+      case "select":
+        if (!(step.columns as string[])?.length)
+          return "Select : sélectionnez au moins une colonne.";
+        return null;
+      case "deduplicate":
+        if (!(step.columns as string[])?.length)
+          return "Deduplicate : sélectionnez au moins une colonne.";
+        return null;
+      case "sort":
+        if (!step.column) return "Sort : sélectionnez une colonne.";
+        return null;
+      case "limit":
+        if (!step.n || (step.n as number) < 1)
+          return "Limit : renseignez un nombre de lignes valide.";
+        return null;
+      default:
+        return null;
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
     if (!datasourceId) return setError("Sélectionnez une datasource.");
     if (!steps.length) return setError("Ajoutez au moins une étape.");
+    for (const step of steps) {
+      const err = getStepError(step);
+      if (err) return setError(err);
+    }
     try {
       const name = jobName.trim() || "Job sans titre";
       await createJob.mutateAsync({
