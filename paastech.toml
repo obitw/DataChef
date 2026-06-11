@@ -22,6 +22,7 @@ public_host = "api.paastech.polydo.dev"
 name = "worker"
 type = "worker"
 path = "worker"
+replicas = 2
 
 [[processes]]
 name = "frontend"
