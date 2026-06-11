@@ -6,7 +6,7 @@ export function useJobs() {
   return useQuery<Job[]>({
     queryKey: ["jobs"],
     queryFn: async () => {
-      const { data } = await client.get("/jobs");
+      const { data } = await client.get("/jobs/");
       return data;
     },
     refetchInterval: (query) => {
@@ -45,7 +45,7 @@ export function useCreateJob() {
       datasource_id: string;
       pipeline: PipelineStep[];
     }) => {
-      const { data } = await client.post<Job>("/jobs", payload);
+      const { data } = await client.post<Job>("/jobs/", payload);
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["jobs"] }),
