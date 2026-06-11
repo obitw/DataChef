@@ -89,7 +89,11 @@ function NewJobModal({ onClose }: { onClose: () => void }) {
     switch (step.op) {
       case "filter":
         if (!step.column) return "Filter : sélectionnez une colonne.";
-        if (step.value === "" || step.value === null || step.value === undefined)
+        if (
+          step.value === "" ||
+          step.value === null ||
+          step.value === undefined
+        )
           return "Filter : renseignez une valeur.";
         return null;
       case "aggregate":
