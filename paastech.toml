@@ -16,18 +16,17 @@ name = "api"
 type = "web"
 path = "api"
 port = 8000
-public_host = "api.paastech.polydo.dev"
+public_host = "api-datachef.paastech.izoret.fr"
 
 [[processes]]
 name = "worker"
 type = "worker"
 path = "worker"
-replicas = 2
 
 [[processes]]
 name = "frontend"
 type = "web"
 path = "frontend"
 port = 3000
-public_host = "app.paastech.polydo.dev"
-build_env = { VITE_API_URL = "https://api.paastech.polydo.dev" }
+public_host = "front-datachef.paastech.izoret.fr"
+build_env = { VITE_API_URL = "https://api-datachef.paastech.izoret.fr" }
